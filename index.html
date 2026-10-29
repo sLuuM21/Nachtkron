@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100d17"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="mobile-web-app-capable" content="yes"><title>Nachtkron – Handy-RPG</title>
+<style>
+:root{--bg:#100d17;--panel:#1d1927;--panel2:#272135;--line:#40364f;--gold:#f2c16b;--red:#e25d70;--text:#f7f2ff;--muted:#b7aec8;--green:#7fe0ae;--blue:#8fc1ff;--purple:#d3a0ff;--orange:#ffad70}
+*{box-sizing:border-box}body{margin:0;color:var(--text);font:15px/1.45 system-ui,-apple-system,sans-serif;background:radial-gradient(ellipse at 50% -10%,#3a2a48 0,#17121f 40%,#0d0b12 85%)}main{max-width:1180px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.brand{display:flex;align-items:center;gap:12px}.sigil{font-size:34px;color:var(--gold);text-shadow:0 0 22px #c68d5c88}h1{font-size:clamp(28px,5vw,42px);letter-spacing:.09em;margin:0;line-height:1.1}h2{font-size:18px;margin:0 0 12px}h3{font-size:14px;margin:0 0 8px}.sub{font-size:12px;color:var(--muted)}.pill{font-size:11px;border:1px solid #7a5c2f;border-radius:99px;padding:6px 10px;color:var(--gold);white-space:nowrap;letter-spacing:.06em}
+.grid{display:grid;grid-template-columns:1.08fr .92fr;gap:13px}.panel{min-width:0;background:linear-gradient(145deg,#231e30ed,#17141fee);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 14px 35px #0003}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#111019;border:1px solid #332b40;border-radius:11px;padding:8px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:20px}.bar{height:9px;background:#3b2633;border-radius:99px;overflow:hidden;margin:7px 0}.bar span{display:block;height:100%;background:linear-gradient(90deg,#a8324a,#ef697a);transition:width .2s}.xpbar span{background:linear-gradient(90deg,#9660d2,#d1a0ff)}
+button,select{font:inherit;cursor:pointer;border:1px solid #70562f;background:linear-gradient(#3c2e1e,#2b2118);color:var(--gold);border-radius:10px;padding:9px 11px;font-weight:700}button:hover{filter:brightness(1.14)}button.secondary,select{border-color:var(--line);background:#252031;color:var(--text)}button:disabled{opacity:.35;cursor:not-allowed}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.enemy{display:flex;gap:12px;align-items:center}.monster{width:78px;height:78px;display:grid;place-items:center;font-size:48px;flex-shrink:0;border:1px solid #633547;border-radius:16px;background:radial-gradient(circle,#542c3e,#251723)}.enemyinfo{flex:1;min-width:0}.enemyname{font-size:17px;font-weight:800}.log{height:116px;overflow:auto;background:#100e16;border:1px solid #342b41;border-radius:11px;padding:9px;font-size:12px}.log p{margin:0 0 6px}.good{color:var(--green)}.warn{color:var(--gold)}.rarity{font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}.common{color:#b9b5c2}.uncommon{color:var(--green)}.rare{color:var(--blue)}.epic{color:var(--purple)}.legendary{color:var(--orange)}.item{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #30283b;padding:9px 0}.item:last-child{border-bottom:0}.itemmain{min-width:0}.itemname{font-weight:750;display:block;overflow-wrap:anywhere}.itemstats{font-size:11px;color:var(--muted)}.itemactions{display:flex;flex-direction:column;gap:5px;flex-shrink:0}.itemactions button{padding:6px 8px;font-size:12px}.compare{font-size:11px;margin-top:3px}.better{color:var(--green)}.worse{color:#ed8995}.talent{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #30283b}.talent:last-child{border:0}.talent button{font-size:12px;padding:7px}.filterrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:9px}.check{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:5px}.check input{accent-color:var(--gold)}.lootlist{max-height:360px;overflow:auto}.notice{padding:10px;border:1px solid #4d3c2c;background:#261e1c;border-radius:11px;color:#e9d7b9;font-size:12px}.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}.tabs button{font-size:12px;padding:7px 9px}.tabs button.active{background:#574027;border-color:#b28b4b}.section{margin-top:15px}.foot{font-size:11px;color:var(--muted);text-align:center;padding:17px 0 3px}
+@media(max-width:760px){main{padding:11px}.grid{grid-template-columns:1fr}.panel{padding:12px}.stats{grid-template-columns:repeat(3,1fr)}.monster{width:64px;height:64px;font-size:39px}header{align-items:flex-start}.pill{white-space:normal;text-align:center}.item{align-items:flex-start}}
+
+/* Phone-first touch improvements */
+html { -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; padding-bottom: env(safe-area-inset-bottom); }
+button, select, input { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button { min-height: 46px; }
+button:active { transform: scale(.98); filter: brightness(1.2); }
+.actions button { flex: 1 1 calc(50% - 7px); min-height: 50px; }
+.talent button, .itemactions button { min-height: 42px; }
+@media(max-width:600px) {
+  main { padding: 10px 9px calc(18px + env(safe-area-inset-bottom)); }
+  header { display: block; margin-bottom: 12px; }
+  header .pill { display: inline-block; margin-top: 10px; }
+  h1 { font-size: 29px; }
+  .grid { display: flex; flex-direction: column; gap: 10px; }
+  .panel { border-radius: 15px; padding: 12px; }
+  .stats { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
+  .stat { padding: 8px 6px; }
+  .stat strong { font-size: 18px; }
+  .monster { width: 58px; height: 58px; font-size: 34px; }
+  .enemy { gap: 9px; }
+  .enemyname { font-size: 16px; }
+  .actions { gap: 7px; }
+  .actions button { padding: 10px 7px; font-size: 13px; }
+  .tabs { position: sticky; top: 0; z-index: 5; background: #100d17ee; padding: 6px 0; }
+  .item { gap: 8px; }
+  .itemactions { min-width: 88px; }
+  .itemactions button { padding: 7px 5px; font-size: 12px; }
+  .filterrow { gap: 10px; }
+  select { min-height: 44px; max-width: 100%; }
+  .check { min-height: 30px; }
+  .log { height: 105px; }
+}
+</style></head>
+<body><main>
+<header><div class="brand"><div class="sigil">☾</div><div><h1>NACHTKRON</h1><div class="sub">Ein düsteres Loot-RPG · Handy-Prototyp 0.4</div></div></div><span class="pill">∞ KEINE ENERGIE · AUTO-FARMING</span></header>
+<div class="grid">
+<section class="panel">
+<h2>⚔️ Jagdgebiet</h2>
+<div class="enemy"><div class="monster" id="enemyIcon">☠️</div><div class="enemyinfo"><div class="enemyname" id="enemyName">Moderwandler</div><div class="sub" id="enemyDesc">Verfallener Hain · Stufe 1</div><div class="bar"><span id="enemyBar"></span></div><div class="sub" id="enemyHp">42 / 42 LP</div></div></div>
+<div class="actions"><button onclick="attack()">⚔️ Angriff</button><button class="secondary" id="autoBtn" onclick="toggleAuto()">▶ Auto-Jagd: AUS</button><button class="secondary" onclick="heal()">✚ Heilen</button><button class="secondary" onclick="nextZone()">🗺️ Gebiet wechseln</button></div>
+<div class="section"><h2>📜 Kampfprotokoll</h2><div class="log" id="log" aria-live="polite"></div></div>
+<div class="section notice">Designziel: Ein Held, sinnvolle Beuteentscheidungen, aktive Kämpfe plus Auto-Farming. Keine Energie, keine künstlichen Wartezeiten.</div>
+</section>
+<section class="panel">
+<h2>🧙 Dein Sentinel</h2><div class="stats">
+<div class="stat"><small>Stufe</small><strong id="level">1</strong></div><div class="stat"><small>Angriff</small><strong id="atk">10</strong></div><div class="stat"><small>Krit-Chance</small><strong id="crit">8%</strong></div>
+<div class="stat"><small>LP</small><strong id="hp">80/80</strong></div><div class="stat"><small>Gold</small><strong id="gold">0</strong></div><div class="stat"><small>Talentpunkte</small><strong id="points">1</strong></div></div>
+<div class="bar xpbar"><span id="xpbar" style="width:0%"></span></div><div class="sub" id="xptext">0 / 25 EP</div>
+<div class="section"><h2>🛡️ Ausrüstung</h2><div id="gear"></div></div>
+<div class="section"><h2>🌑 Talente</h2><div class="sub">Talentpunkte erhältst du beim Levelaufstieg.</div>
+<div class="talent"><div><strong>Angriff %</strong><div class="sub">+8% Angriff pro Rang · <span id="ta">0/5</span></div></div><button onclick="upgrade('attack')">Verbessern</button></div>
+<div class="talent"><div><strong>Kritische Chance</strong><div class="sub">+3% pro Rang · <span id="tc">0/5</span></div></div><button onclick="upgrade('crit')">Verbessern</button></div>
+<div class="talent"><div><strong>Angriffstempo</strong><div class="sub">Schnellere Auto-Angriffe · <span id="ts">0/5</span></div></div><button onclick="upgrade('speed')">Verbessern</button></div>
+<div class="talent"><div><strong>Lebensraub</strong><div class="sub">Heilt dich bei Treffern · <span id="tl">0/5</span></div></div><button onclick="upgrade('leech')">Verbessern</button></div></div>
+</section>
+<section class="panel">
+<h2>🎒 Beute & Lootfilter</h2>
+<div class="filterrow"><label class="check" for="mode">Filtermodus</label><select id="mode" onchange="render()"><option value="any">HAS ANY – mindestens ein Stat</option><option value="only">HAS ONLY – alle ausgewählten Stats</option></select></div>
+<div class="filterrow">
+<label class="check"><input type="checkbox" data-stat="attack" checked onchange="render()">Angriff %</label>
+<label class="check"><input type="checkbox" data-stat="crit" checked onchange="render()">Krit-Chance</label>
+<label class="check"><input type="checkbox" data-stat="speed" onchange="render()">Angriffstempo</label>
+<label class="check"><input type="checkbox" data-stat="hp" onchange="render()">Leben</label>
+<label class="check"><input type="checkbox" data-stat="leech" onchange="render()">Lebensraub</label>
+</div>
+<div class="sub" id="filterNote">HAS ANY behält Gegenstände mit mindestens einem aktivierten Stat.</div>
+<div class="filterrow section"><label class="check" for="rarity">Mindest-Seltenheit</label><select id="rarity" onchange="render()"><option value="0">Alle</option><option value="1">Ungewöhnlich+</option><option value="2">Selten+</option><option value="3">Episch+</option><option value="4">Legendär</option></select></div>
+<div class="lootlist" id="loot"></div>
+<div class="actions"><button class="secondary" onclick="sellFiltered()">Gefilterte Beute verkaufen</button><button class="secondary" onclick="saveNow()">💾 Speichern</button></div>
+</section>
+<section class="panel">
+<h2>📈 Fortschritt & nächste Schritte</h2>
+<div class="item"><div class="itemmain"><span class="itemname">Kampfbilanz</span><span class="itemstats" id="kills">Besiegte Gegner: 0</span></div><span>⚔️</span></div>
+<div class="item"><div class="itemmain"><span class="itemname">Automatisches Speichern</span><span class="itemstats">Nach Fortschritt im Browser</span></div><span class="good">●</span></div>
+<div class="item"><div class="itemmain"><span class="itemname">Offline-Fortschritt</span><span class="itemstats" id="offline">Wird beim Laden berechnet</span></div><span>◷</span></div>
+<div class="section"><h3>Unser Bauplan</h3>
+<div class="item"><div class="itemmain"><span class="itemname">Jetzt enthalten</span><span class="itemstats">Zufällige Affixe, Seltenheiten, Ausrüstungsvergleich, Lootfilter</span></div><span class="good">✓</span></div>
+<div class="item"><div class="itemmain"><span class="itemname">Als Nächstes</span><span class="itemstats">Bosse, Quests, mehrere Gebiete und Gegnerfähigkeiten</span></div><span>02</span></div>
+<div class="item"><div class="itemmain"><span class="itemname">Danach</span><span class="itemstats">Klassen-Builds, Ausrüstungssets, Arena-Simulation</span></div><span>03</span></div>
+<div class="item"><div class="itemmain"><span class="itemname">Später</span><span class="itemstats">iPhone-freundliche App-Hülle und echtes Online-Spiel als separates Projekt</span></div><span>04</span></div>
+<div class="actions"><button class="secondary" onclick="resetGame()">Neustart</button></div>
+<p class="sub">Lokaler Einzelspieler-Prototyp. Online-PvP ist noch nicht enthalten. Offline-Fortschritt ist eine vereinfachte Simulation, keine echten Hintergrundkämpfe.</p>
+</div>
+</section>
+</div><div class="foot">NACHTKRON · Ein eigenständiges Fantasy-RPG · Version 0.3</div></main>
+<script>
+const KEY="nachtkron-proto-03";
+const fresh=()=>({level:1,xp:0,next:25,gold:0,hp:85,maxHp:85,baseAtk:10,baseCrit:8,points:1,kills:0,zone:0,enemyHp:42,gear:{Waffe:{name:"Rostklinge",slot:"Waffe",attack:0,crit:0,speed:0,hp:0,leech:0,rarity:0},Rüstung:{name:"Abgewetzter Mantel",slot:"Rüstung",attack:0,crit:0,speed:0,hp:0,leech:0,rarity:0},Relikt:{name:"Leerer Splitter",slot:"Relikt",attack:0,crit:0,speed:0,hp:0,leech:0,rarity:0}},loot:[],talents:{attack:0,crit:0,speed:0,leech:0},lastSeen:Date.now(),auto:false});
+let s=fresh(),timer=null;const rarityNames=["Gewöhnlich","Ungewöhnlich","Selten","Episch","Legendär"],rarityClasses=["common","uncommon","rare","epic","legendary"];
+const zones=[{name:"Verfallener Hain",enemies:[["Moderwandler","☠️",40,8,4],["Hainwolf","🐺",55,10,5]]},{name:"Krypta der Namenlosen",enemies:[["Grabplünderer","💀",85,15,8],["Verirrter Ritter","🛡️",115,20,11]]},{name:"Aschenfeste",enemies:[["Aschenoger","👹",170,30,16],["Gefallener Wächter","⚔️",230,42,23]]}];
+const bases=[["Jägerklinge","Waffe"],["Dämmerungsdolch","Waffe"],["Runenmantel","Rüstung"],["Windläufer-Stiefel","Rüstung"],["Splitter des Zorns","Relikt"],["Blutrote Rune","Relikt"],["Schattenamulett","Relikt"],["Eisenherz-Platte","Rüstung"]];
+function enemy(){let z=zones[s.zone],idx=Math.min(z.enemies.length-1,Math.floor((s.level-1)/3)%z.enemies.length);return z.enemies[idx]}
+function stats(){let gear=Object.values(s.gear);return{atk:Math.round((s.baseAtk+gear.reduce((a,x)=>a+x.attack,0))*(1+s.talents.attack*.08)),crit:Math.min(75,s.baseCrit+gear.reduce((a,x)=>a+x.crit,0)+s.talents.crit*3),speed:gear.reduce((a,x)=>a+x.speed,0)+s.talents.speed*12,hp:gear.reduce((a,x)=>a+x.hp,0),leech:gear.reduce((a,x)=>a+x.leech,0)+s.talents.leech*2}}
+function say(t,c=""){let p=document.createElement("p");p.textContent=t;if(c)p.className=c;document.getElementById("log").prepend(p)}
+function rollItem(){let [name,slot]=bases[Math.floor(Math.random()*bases.length)],r=Math.random()<.015?4:Math.random()<.11?3:Math.random()<.35?2:Math.random()<.7?1:0,mul=1+r*.65;let item={id:Date.now()+Math.random(),name,slot,rarity:r,attack:0,crit:0,speed:0,hp:0,leech:0};let n=1+(r>=2?1:0)+(r===4?1:0);let pool=["attack","crit","speed","hp","leech"];for(let i=0;i<n;i++){let k=pool[Math.floor(Math.random()*pool.length)];item[k]+=Math.round(({attack:3,crit:2,speed:3,hp:12,leech:1}[k])*mul*(.75+Math.random()*.5)*10)/10}item.name=(r>=3?["",""][0]:"")+name;return item}
+function itemStats(x){return`+${x.attack||0} Angriff · +${x.crit||0}% Krit · +${x.speed||0}% Tempo · +${x.hp||0} LP · +${x.leech||0}% Lebensraub`}
+function score(x){return x.attack*1.5+x.crit*1.2+x.speed*.7+x.hp*.06+x.leech*.9}
+function attack(){if(s.hp<=0){say("Du bist besiegt. Heile dich, um weiterzukämpfen.","warn");return}let st=stats(),e=enemy(),damage=Math.round(st.atk*(.9+Math.random()*.25)),critical=Math.random()*100<st.crit;if(critical)damage=Math.round(damage*1.8);s.enemyHp-=damage;let healed=Math.min(s.maxHp-s.hp,Math.floor(damage*st.leech/100));s.hp+=healed;say(`${critical?"Kritischer Treffer! ":""}Du verursachst ${damage} Schaden${healed?` und raubst ${healed} LP`:""}.`,critical?"good":"");if(s.enemyHp<=0){let earnedXp=e[3]+s.zone*8,earnedGold=e[4]+s.zone*4;s.xp+=earnedXp;s.gold+=earnedGold;s.kills++;say(`${e[0]} besiegt: +${earnedXp} EP, +${earnedGold} Gold.`,"good");if(Math.random()<.7){let item=rollItem();s.loot.unshift(item);say(`Beute: ${item.name} · ${rarityNames[item.rarity]}.`,"warn")}while(s.xp>=s.next){s.xp-=s.next;s.level++;s.points++;s.next=Math.round(s.next*1.32);s.baseAtk+=2;s.maxHp+=8;s.hp=s.maxHp;say(`Stufe ${s.level}! +1 Talentpunkt.`,"good")}spawn()}else{let retaliate=Math.max(1,Math.round((s.zone+1)*3+Math.random()*3-st.talents));s.hp=Math.max(0,s.hp-retaliate);say(`${e[0]} trifft dich für ${retaliate} Schaden.`);if(s.hp<=0){toggleAuto(false);say("Du wurdest besiegt. Heile dich und starte erneut.","warn")}}render();saveQuiet()}
+function spawn(){let e=enemy(),scale=1+(s.level-1)*.14+s.zone*.3;s.enemyMax=Math.round(e[2]*scale);if(!s.enemyHp||s.enemyHp<=0||s.enemyHp>s.enemyMax)s.enemyHp=s.enemyMax;render()}
+function equip(id){let i=s.loot.findIndex(x=>x.id===id);if(i<0)return;let x=s.loot[i],old=s.gear[x.slot];if(score(x)<=score(old)){if(!confirm("Dieses Item hat nach der groben Vergleichsformel einen niedrigeren Wert. Trotzdem anlegen?"))return}s.loot.splice(i,1);s.gear[x.slot]=x;if(old.rarity>0||old.attack||old.crit||old.speed||old.hp||old.leech)s.loot.unshift(old);say(`${x.name} angelegt.`, "good");render();saveQuiet()}
+function upgrade(k){if(s.points<=0||s.talents[k]>=5)return;s.talents[k]++;s.points--;say("Talent verbessert.","good");if(k==="speed"&&s.auto)toggleAuto(true);render();saveQuiet()}
+function toggleAuto(force){s.auto=typeof force==="boolean"?force:!s.auto;clearInterval(timer);timer=null;document.getElementById("autoBtn").textContent=s.auto?"Ⅱ Auto-Jagd: AN":"▶ Auto-Jagd: AUS";if(s.auto)timer=setInterval(()=>{if(s.hp>0)attack()},Math.max(420,1200-stats().speed*12));saveQuiet()}
+function heal(){s.hp=s.maxHp;say("Du hast dich vollständig erholt.","good");render();saveQuiet()}
+function nextZone(){if(s.zone<zones.length-1&&s.level>=1+s.zone*3){s.zone++;s.enemyHp=0;spawn();say(`Du betrittst: ${zones[s.zone].name}.`,"good")}else if(s.zone===zones.length-1){say("Du hast alle verfügbaren Zonen freigeschaltet. Weitere Gebiete folgen.")}else say(`Für das nächste Gebiet brauchst du Stufe ${1+(s.zone+1)*3}.`,"warn");render();saveQuiet()}
+function matches(x){let selected=[...document.querySelectorAll("[data-stat]:checked")].map(e=>e.dataset.stat);let min=Number(document.getElementById("rarity").value);if(x.rarity<min)return false;if(!selected.length)return true;let hit=selected.filter(k=>(x[k]||0)>0).length;return document.getElementById("mode").value==="any"?hit>0:hit===selected.length}
+function sellFiltered(){let kept=[],n=0;for(let x of s.loot){if(matches(x))n++;else kept.push(x)}s.loot=kept;s.gold+=n*3;say(n?`${n} gefilterte Gegenstände verkauft: +${n*3} Gold.`:"Keine Gegenstände passen zum aktuellen Filter.");render();saveQuiet()}
+function render(){let st=stats(),e=enemy();document.getElementById("level").textContent=s.level;document.getElementById("atk").textContent=st.atk;document.getElementById("crit").textContent=st.crit+"%";document.getElementById("hp").textContent=`${s.hp}/${s.maxHp}`;document.getElementById("gold").textContent=s.gold;document.getElementById("points").textContent=s.points;document.getElementById("xptext").textContent=`${s.xp} / ${s.next} EP`;document.getElementById("xpbar").style.width=s.xp/s.next*100+"%";document.getElementById("kills").textContent=`Besiegte Gegner: ${s.kills}`;document.getElementById("enemyIcon").textContent=e[1];document.getElementById("enemyName").textContent=e[0];document.getElementById("enemyDesc").textContent=`${zones[s.zone].name} · Stufe ${s.level}`;document.getElementById("enemyHp").textContent=`${Math.max(0,s.enemyHp)} / ${s.enemyMax||e[2]} LP`;document.getElementById("enemyBar").style.width=Math.max(0,s.enemyHp)/(s.enemyMax||e[2])*100+"%";document.getElementById("gear").innerHTML=Object.entries(s.gear).map(([slot,x])=>`<div class="item"><div class="itemmain"><span class="sub">${slot}</span><span class="itemname">${x.name}</span><span class="itemstats">${itemStats(x)}</span></div><span class="rarity ${rarityClasses[x.rarity]}">${rarityNames[x.rarity]}</span></div>`).join("");let list=s.loot.filter(matches);document.getElementById("loot").innerHTML=list.slice(0,25).map(x=>{let old=s.gear[x.slot],diff=score(x)-score(old);return`<div class="item"><div class="itemmain"><span class="itemname ${rarityClasses[x.rarity]}">${x.name}</span><span class="rarity ${rarityClasses[x.rarity]}">${rarityNames[x.rarity]}</span><div class="itemstats">${x.slot} · ${itemStats(x)}</div><div class="compare ${diff>=0?"better":"worse"}">${diff>=0?"▲":"▼"} Vergleichswert ${diff>=0?"+":""}${diff.toFixed(1)}</div></div><div class="itemactions"><button onclick="equip(${x.id})">Anlegen</button><button class="secondary" onclick="discard(${x.id})">Verwerfen</button></div></div>`}).join("")||'<div class="sub">Keine Beute passt zum Filter. Passe die Auswahl an oder besiege weitere Gegner.</div>';document.getElementById("filterNote").textContent=document.getElementById("mode").value==="any"?"HAS ANY: mindestens ein ausgewählter Stat muss vorhanden sein.":"HAS ONLY: jeder ausgewählte Stat muss vorhanden sein; weitere Werte sind erlaubt.";document.getElementById("ta").textContent=s.talents.attack+"/5";document.getElementById("tc").textContent=s.talents.crit+"/5";document.getElementById("ts").textContent=s.talents.speed+"/5";document.getElementById("tl").textContent=s.talents.leech+"/5";document.querySelectorAll(".talent button").forEach((b,i)=>b.disabled=s.points<=0||s.talents[["attack","crit","speed","leech"][i]]>=5)}
+function discard(id){s.loot=s.loot.filter(x=>x.id!==id);render();saveQuiet()}
+function saveQuiet(){s.lastSeen=Date.now();try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function saveNow(){saveQuiet();say("Spielstand im Browser gespeichert.","good")}
+function resetGame(){if(!confirm("Spielstand löschen und neu anfangen?"))return;clearInterval(timer);timer=null;s=fresh();localStorage.removeItem(KEY);document.getElementById("log").innerHTML="";spawn();say("Neues Abenteuer beginnt.","good");render()}
+function load(){try{let raw=localStorage.getItem(KEY);if(raw){let old=JSON.parse(raw);s={...fresh(),...old,talents:{...fresh().talents,...old.talents},gear:{...fresh().gear,...old.gear}};let elapsed=Math.min(8*3600,Math.max(0,Math.floor((Date.now()-(s.lastSeen||Date.now()))/1000)));if(elapsed>90){let e=enemy(),rate=Math.max(.5,1.2-stats().speed*.012),hits=Math.min(500,Math.floor(elapsed/rate)),kills=Math.floor(hits/Math.max(1,Math.ceil((s.enemyMax||e[2])/Math.max(1,stats().atk))));let xp=kills*e[3],gold=kills*e[4];s.kills+=kills;s.xp+=xp;s.gold+=gold;let ups=0;while(s.xp>=s.next&&ups<20){s.xp-=s.next;s.level++;s.points++;s.next=Math.round(s.next*1.32);s.baseAtk+=2;s.maxHp+=8;s.hp=s.maxHp;ups++}document.getElementById("offline").textContent=`${Math.floor(elapsed/60)} Min. abwesend · ca. ${kills} Siege · +${xp} EP · +${gold} Gold`;if(kills)say(`Offline-Fortschritt: ca. ${kills} Siege, +${xp} EP, +${gold} Gold.`,"good")}else document.getElementById("offline").textContent="Kein längerer Offline-Zeitraum."}else document.getElementById("offline").textContent="Neues Abenteuer – noch kein Spielstand."}catch(err){s=fresh()}s.lastSeen=Date.now();spawn();render()}
+window.addEventListener("beforeunload",saveQuiet);load();say("Willkommen in Nachtkron. Deine Jagd kostet keine Energie.","good");
+</script></body></html>
